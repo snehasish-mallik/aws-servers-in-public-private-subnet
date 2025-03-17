@@ -1,20 +1,20 @@
 variable "account_no" {
-    type = string
-  
+  type = string
+
 }
 
 variable "assume_role_name" {
-    type = string
-  
+  type = string
+
 }
 
 variable "region" {
-    type = string
-  
+  type = string
+
 }
 
 variable "vpc_name" {
-    type = string
+  type = string
 }
 
 variable "public_subnet_1_name" {
@@ -26,8 +26,8 @@ variable "public_subnet_2_name" {
 }
 
 variable "private_subnet_1_name" {
-    type = string
-  
+  type = string
+
 }
 
 variable "private_subnet_2_name" {
@@ -35,8 +35,8 @@ variable "private_subnet_2_name" {
 }
 
 variable "vpc_cidr" {
-    type = string
-  
+  type = string
+
 }
 
 variable "public_subnet_1_cidr" {

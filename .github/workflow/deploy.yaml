@@ -1,0 +1,54 @@
+name: Terraform Deploy Pipeline
+
+on:
+  workflow_dispatch:  # Manual trigger
+    inputs:
+      environment:
+        description: "Select the environment to deploy (dev, test, prod)"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Store Selected Environment
+        run: echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Configure AWS Credentials Based on Environment
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: "us-east-1"
+          aws-access-key-id: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}', env.ENVIRONMENT)] }}
+          aws-secret-access-key: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}', env.ENVIRONMENT)] }}
+          output-credentials: true
+
+      - name: Initialize Terraform with Backend Config
+        run: |
+          terraform init -backend-config="backend.${ENVIRONMENT}.conf"
+
+      - name: Validate Terraform Configuration
+        run: |
+          terraform validate
+
+      - name: Terraform Plan
+        run: |
+          terraform plan -var-file=terraform.${ENVIRONMENT}.tfvars
+
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve -var-file=terraform.${ENVIRONMENT}.tfvars
