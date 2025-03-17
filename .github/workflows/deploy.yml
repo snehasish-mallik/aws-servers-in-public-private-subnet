@@ -39,7 +39,7 @@ jobs:
 
       - name: Initialize Terraform with Backend Config
         run: |
-          terraform init -backend-config="backend.${ENVIRONMENT}.conf"
+          terraform init -backend-config=${ENVIRONMENT}/backend.${ENVIRONMENT}.conf
 
       - name: Validate Terraform Configuration
         run: |
@@ -47,8 +47,8 @@ jobs:
 
       - name: Terraform Plan
         run: |
-          terraform plan -var-file=terraform.${ENVIRONMENT}.tfvars
+          terraform plan -var-file=${ENVIRONMENT}/terraform.${ENVIRONMENT}.tfvars
 
       - name: Terraform Apply
         run: |
-          terraform apply -auto-approve -var-file=terraform.${ENVIRONMENT}.tfvars
+          terraform apply -auto-approve -var-file=${ENVIRONMENT}/terraform.${ENVIRONMENT}.tfvars
