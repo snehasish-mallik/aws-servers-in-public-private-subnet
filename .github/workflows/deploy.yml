@@ -39,6 +39,7 @@ jobs:
 
       - name: Initialize Terraform with Backend Config
         run: |
+          ls -l ${ENVIRONMENT}/
           terraform init -backend-config=${ENVIRONMENT}/backend.${ENVIRONMENT}.conf
 
       - name: Validate Terraform Configuration
