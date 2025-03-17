@@ -14,7 +14,7 @@ on:
           - prod
 
 jobs:
-  terraform:
+  Terraform-Deploy:
     runs-on: ubuntu-latest
 
     steps:
