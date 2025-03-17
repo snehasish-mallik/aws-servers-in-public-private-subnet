@@ -79,6 +79,9 @@ resource "aws_internet_gateway" "ig" {
 
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.dv_vpc.id
+  tags = {
+    Name: "IG Route Table"
+  }
 
 }
 
@@ -115,6 +118,9 @@ resource "aws_nat_gateway" "nat_gw" {
 # Private Route Table
 resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.dv_vpc.id
+  tags = {
+    Name: "NAT Route Table"
+  }
 }
 
 resource "aws_route" "private_nat_access" {
