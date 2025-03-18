@@ -27,7 +27,7 @@ The following diagram illustrates the infrastructure setup:
 ### Deployment Steps
 1. **Initialize Terraform:**
    ```sh
-   terraform init
+   terraform init -backend-config="backend.env.conf"
    ```
 2. **Validate Configuration:**
    ```sh
@@ -52,4 +52,5 @@ terraform destroy -var-file=env/dev.tfvars -auto-approve
 - Modify `tfvars` files to deploy different environments.
 - Ensure AWS CLI authentication with `aws configure`.
 - IAM role must have necessary permissions for Terraform execution.
+- I have also set up Github Action Pipeline for this. Do check that out. 
 
