@@ -1,4 +1,4 @@
-# Scalable AWS Infrastructure Automation with Terraform
+# Secure & Scalable AWS Infrastructure Automation with Terraform
 
 ## Overview
 This Terraform setup provisions an AWS infrastructure to create a highly available, secure, and scalable environment with the following components:
