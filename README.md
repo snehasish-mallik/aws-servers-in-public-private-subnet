@@ -52,5 +52,5 @@ terraform destroy -var-file=env/dev.tfvars -auto-approve
 - Modify `tfvars` files to deploy different environments.
 - Ensure AWS CLI authentication with `aws configure`.
 - IAM role must have necessary permissions for Terraform execution.
-- I have also set up Github Action Pipeline for this. Do check that out. 
+- I have also set up Github Actions Pipeline for this. Do check that out. 
 
