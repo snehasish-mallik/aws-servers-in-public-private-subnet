@@ -1,3 +1,8 @@
+/*
+Author: Snehasish Mallik
+Date: 18th of March, 2025
+*/
+
 provider "aws" {
   region = var.region
   assume_role {
