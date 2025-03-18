@@ -53,3 +53,7 @@ jobs:
       - name: Terraform Apply
         run: |
           terraform apply -auto-approve -var-file=${ENVIRONMENT}/terraform.${ENVIRONMENT}.tfvars
+      
+      - name: Terraform Destroy
+        run: |
+          terraform destroy -auto-approve -var-file=${ENVIRONMENT}/terraform.${ENVIRONMENT}.tfvars
