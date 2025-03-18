@@ -2,6 +2,9 @@ variable "account_no" {
   type = string
 
 }
+variable "env" {
+  type = string
+}
 
 variable "assume_role_name" {
   type = string

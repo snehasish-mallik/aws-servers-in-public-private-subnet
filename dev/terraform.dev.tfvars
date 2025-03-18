@@ -1,6 +1,7 @@
 account_no       = "463470958825"
 assume_role_name = "deploy_role"
 region           = "us-east-1"
+env = "dev"
 
 vpc_name              = "dev_vpc"
 public_subnet_1_name  = "dev_public_subnet_1"

@@ -229,6 +229,7 @@ resource "aws_autoscaling_group" "private_asg" {
   desired_capacity    = 2
   min_size            = 2
   max_size            = 3
+  name = "${var.env}-asg"
 
   launch_template {
     id      = aws_launch_template.private_lt.id
