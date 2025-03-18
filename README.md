@@ -21,13 +21,13 @@ The following diagram illustrates the infrastructure setup:
 
 ## Setup
 ### Configure Environment
-- Terraform variables are stored in environment-specific `tfvars` files (`dev`, `test`, `prod`).
-- Backend state is managed via `backend.env.conf` for S3 state storage.
+- Terraform variables are stored in environment-specific `tfvars` files (`dev`, `test`, `prod`) in respective env folder.
+- Backend state is managed via `backend.env.conf` for S3 state storage for each env in respective env folder.
 
 ### Deployment Steps
 1. **Initialize Terraform:**
    ```sh
-   terraform init -backend-config="backend.env.conf"
+   terraform init -backend-config=backend.env.conf
    ```
 2. **Validate Configuration:**
    ```sh
