@@ -192,7 +192,7 @@ resource "aws_lb_target_group" "tg" {
   name     = "my-target-group"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.my_vpc.id
+  vpc_id   = aws_vpc.dv_vpc.id
 }
 
 resource "aws_lb_listener" "http" {
@@ -226,7 +226,7 @@ resource "aws_launch_template" "private_lt" {
 
 # Auto Scaling Group
 resource "aws_autoscaling_group" "private_asg" {
-  vpc_zone_identifier = [aws_subnet.private_1.id, aws_subnet.private_2.id]
+  vpc_zone_identifier = [aws_subnet.private_subnet_1.id, aws_subnet.private_subnet_2.id]
   desired_capacity    = 2
   min_size            = 2
   max_size            = 3
@@ -243,7 +243,7 @@ resource "aws_autoscaling_group" "private_asg" {
 resource "aws_instance" "public_ec2" {
   ami             = "ami-01816d07b1128cd2d"
   instance_type   = "t2.micro"
-  subnet_id       = aws_subnet.public_1.id
+  subnet_id       = aws_subnet.public_subnet_1.id
   key_name        = var.key_pair
   security_groups = [aws_security_group.alb_sg.id]
 
