@@ -54,3 +54,7 @@ variable "private_subnet_1_cidr" {
 variable "private_subnet_2_cidr" {
   type = string
 }
+
+variable "key_pair" {
+  type = string
+}
