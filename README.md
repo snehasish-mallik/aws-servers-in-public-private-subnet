@@ -1,26 +1,33 @@
 # AWS Infrastructure Setup with Terraform
 
 ## Overview
-This Terraform setup provisions an AWS infrastructure with:
-- **VPC** (public & private subnets)
-- **Internet & NAT Gateways**
-- **Security Groups** (ALB & EC2)
-- **Application Load Balancer (ALB)**
-- **Auto Scaling Group (ASG) & Launch Template**
+This Terraform setup provisions an AWS infrastructure to create a highly available, secure, and scalable environment with the following components:
+- **VPC** with public and private subnets
+- **Internet Gateway & NAT Gateways** for internet access
+- **Security Groups** for controlled access
+- **Application Load Balancer (ALB)** for distributing traffic
+- **Auto Scaling Group (ASG) & Launch Template** for dynamic scaling
 - **IAM Role Assumption** for secure resource access
 
+## Architecture Diagram
+The following diagram illustrates the infrastructure setup:
+
+![image](https://github.com/user-attachments/assets/9e1d7551-97d7-4215-8aef-46d866f97bba)
+
+
 ## Prerequisites
-- Terraform & AWS CLI installed
-- IAM permissions to create resources
+- Install **Terraform** and **AWS CLI**
+- Ensure IAM permissions to create necessary AWS resources
 
 ## Setup
 ### Configure Environment
-Terraform variables are stored in environment-specific `tfvars` files (`dev`, `test`, `prod`). Backend state is managed via `backend.env.conf` for S3.
+- Terraform variables are stored in environment-specific `tfvars` files (`dev`, `test`, `prod`).
+- Backend state is managed via `backend.env.conf` for S3 state storage.
 
 ### Deployment Steps
 1. **Initialize Terraform:**
    ```sh
-   terraform init -backend-config=backend.env.conf
+   terraform init
    ```
 2. **Validate Configuration:**
    ```sh
@@ -36,12 +43,13 @@ Terraform variables are stored in environment-specific `tfvars` files (`dev`, `t
    ```
 
 ### Destroy Infrastructure
+To remove the deployed resources, run:
 ```sh
 terraform destroy -var-file=env/dev.tfvars -auto-approve
 ```
 
 ## Notes
-- Modify `tfvars` for different environments.
-- Ensure AWS CLI authentication (`aws configure`).
-- IAM role must have necessary permissions.
+- Modify `tfvars` files to deploy different environments.
+- Ensure AWS CLI authentication with `aws configure`.
+- IAM role must have necessary permissions for Terraform execution.
 
