@@ -143,7 +143,7 @@ resource "aws_route_table_association" "private_2" {
 
 # Security Groups
 resource "aws_security_group" "alb_sg" {
-  vpc_id = aws_vpc.my_vpc.id
+  vpc_id = aws_vpc.dv_vpc.id
   name   = "alb_sg"
 
   ingress {
@@ -162,7 +162,7 @@ resource "aws_security_group" "alb_sg" {
 }
 
 resource "aws_security_group" "ec2_sg" {
-  vpc_id = aws_vpc.my_vpc.id
+  vpc_id = aws_vpc.dv_vpc.id
   name   = "ec2_sg"
   ingress {
     from_port       = 80
@@ -185,7 +185,7 @@ resource "aws_lb" "alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [aws_subnet.public_1.id, aws_subnet.public_2.id]
+  subnets            = [aws_subnet.public_subnet_1.id, aws_subnet.public_subnet_2.id]
 }
 
 resource "aws_lb_target_group" "tg" {
