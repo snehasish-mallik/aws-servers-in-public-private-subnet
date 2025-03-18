@@ -58,3 +58,6 @@ variable "private_subnet_2_cidr" {
 variable "key_pair" {
   type = string
 }
+variable "ami" {
+  type = string
+}

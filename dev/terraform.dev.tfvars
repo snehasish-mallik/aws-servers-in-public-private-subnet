@@ -15,3 +15,4 @@ private_subnet_1_cidr = "10.0.3.0/24"
 private_subnet_2_cidr = "10.0.4.0/24"
 
 key_pair = "darth-vader"
+ami      = "ami-01816d07b1128cd2d"

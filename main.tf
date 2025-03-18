@@ -208,7 +208,7 @@ resource "aws_lb_listener" "http" {
 # Launch Template for Auto Scaling Group
 resource "aws_launch_template" "private_lt" {
   name_prefix            = "private-ec2-lt"
-  image_id               = "ami-01816d07b1128cd2d"
+  image_id               = var.ami
   instance_type          = "t2.micro"
   key_name               = var.key_pair
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
@@ -218,8 +218,7 @@ resource "aws_launch_template" "private_lt" {
               yum install -y httpd
               systemctl start httpd
               systemctl enable httpd
-              INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-              echo "<h1>Private EC2 - Instance ID: $INSTANCE_ID</h1>" > /var/www/html/index.html
+              echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
               EOF
   )
 }
@@ -237,21 +236,4 @@ resource "aws_autoscaling_group" "private_asg" {
   }
 
   target_group_arns = [aws_lb_target_group.tg.arn]
-}
-
-# Public EC2 Instance
-resource "aws_instance" "public_ec2" {
-  ami             = "ami-01816d07b1128cd2d"
-  instance_type   = "t2.micro"
-  subnet_id       = aws_subnet.public_subnet_1.id
-  key_name        = var.key_pair
-  security_groups = [aws_security_group.alb_sg.id]
-
-  user_data = <<-EOF
-              #!/bin/bash
-              yum install -y httpd
-              systemctl start httpd
-              systemctl enable httpd
-              echo "<h1>Public EC2</h1>" > /var/www/html/index.html
-              EOF
 }
