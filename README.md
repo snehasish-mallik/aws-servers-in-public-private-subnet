@@ -20,7 +20,7 @@ Terraform variables are stored in environment-specific `tfvars` files (`dev`, `t
 ### Deployment Steps
 1. **Initialize Terraform:**
    ```sh
-   terraform init
+   terraform init -backend-config=backend.env.conf
    ```
 2. **Validate Configuration:**
    ```sh
@@ -44,12 +44,4 @@ terraform destroy -var-file=env/dev.tfvars -auto-approve
 - Modify `tfvars` for different environments.
 - Ensure AWS CLI authentication (`aws configure`).
 - IAM role must have necessary permissions.
-
-## Troubleshooting
-- Check AWS IAM permissions if Terraform fails.
-- Debug with:
-  ```sh
-  terraform state list
-  terraform state show <resource>
-  ```
 
