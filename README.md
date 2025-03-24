@@ -27,7 +27,7 @@ The following diagram illustrates the infrastructure setup:
 ### Deployment Steps
 1. **Initialize Terraform:**
    ```sh
-   terraform init -backend-config=backend.env.conf
+   terraform init -backend-config=backend.dev.conf
    ```
 2. **Validate Configuration:**
    ```sh
