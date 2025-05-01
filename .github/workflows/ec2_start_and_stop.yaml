@@ -1,0 +1,83 @@
+name: Stop Anzo Server
+
+on:
+  workflow_dispatch:
+    inputs:
+      env_name:
+        description: "Environment Name"
+        required: true
+        type: string
+
+jobs:
+  stop-anzo:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_IAM_ROLE
+          aws-region: us-east-1  # Change to your region
+
+      - name: Get GitHub Actions Runner IP
+        id: get_ip
+        run: |
+          export GH_IP=$(curl -s https://api.ipify.org)
+          echo "GitHub Actions Runner IP: $GH_IP"
+          echo "GH_IP=$GH_IP" >> $GITHUB_ENV
+
+      - name: Create Security Group & Allow SSH
+        id: create_sg
+        run: |
+          SG_ID=$(aws ec2 create-security-group --group-name "gha-ssh-access" --description "Temporary SG for GitHub Actions SSH" --query 'GroupId' --output text)
+          aws ec2 authorize-security-group-ingress --group-id $SG_ID --protocol tcp --port 22 --cidr $GH_IP/32
+          echo "SG_ID=$SG_ID" >> $GITHUB_ENV
+          echo "Created Security Group: $SG_ID"
+
+      - name: 🔄 Attach Security Group to all EC2 Instances
+        run: |
+          INSTANCE_IDS=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].InstanceId' --output text)
+          for ID in $INSTANCE_IDS; do
+            CURRENT_SGS=$(aws ec2 describe-instances --instance-ids $ID --query 'Reservations[0].Instances[0].SecurityGroups[*].GroupId' --output text)
+            aws ec2 modify-instance-attribute --instance-id $ID --groups $CURRENT_SGS $SG_ID
+            echo "Attached SG $SG_ID to $ID"
+          done
+
+      - name: Fetch SSH Key from AWS Secrets Manager
+        id: fetch_ssh_key
+        run: |
+          export SSH_KEY="$(aws secretsmanager get-secret-value --secret-id "idpcmmr-${{ github.event.inputs.env_name }}" --query SecretString --output text)"
+          echo "$SSH_KEY" > /tmp/private_key.pem
+          chmod 600 /tmp/private_key.pem
+
+      - name: Install Ansible
+        run: sudo apt update && sudo apt install -y ansible
+
+      - name: Run Ansible Playbook to Stop Anzo
+        run: |
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/inventory.ini ansible/stop_anzo.yml --private-key=/tmp/private_key.pem
+
+      - name: 🔄 Remove Security Group from EC2 Instances
+        run: |
+          for ID in $INSTANCE_IDS; do
+            CURRENT_SGS=$(aws ec2 describe-instances --instance-ids $ID --query 'Reservations[0].Instances[0].SecurityGroups[*].GroupId' --output text)
+            NEW_SGS=$(echo $CURRENT_SGS | sed "s/$SG_ID//g")
+            aws ec2 modify-instance-attribute --instance-id $ID --groups $NEW_SGS
+            echo "Removed SG $SG_ID from $ID"
+          done
+
+      - name: 🗑️ Delete Security Group
+        run: |
+          aws ec2 delete-security-group --group-id $SG_ID
+          echo "Deleted Security Group: $SG_ID"
+
+      - name: Securely Remove SSH Key
+        if: always()
+        run: rm -f /tmp/private_key.pem
