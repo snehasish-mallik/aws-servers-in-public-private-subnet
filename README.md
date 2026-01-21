@@ -6,7 +6,7 @@ This Terraform setup provisions an AWS infrastructure to create a highly availab
 - **Internet Gateway & NAT Gateways** for internet access
 - **Security Groups** for controlled access
 - **Application Load Balancer (ALB)** for distributing traffic
-- **Auto Scaling Group (ASG) & Launch Template** for dynamic scaling
+- **Auto Scaling Group (ASG)** for dynamic scaling
 - **IAM Role Assumption** for secure resource access
 
 ## Architecture Diagram
