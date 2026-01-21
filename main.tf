@@ -18,7 +18,7 @@ terraform {
 }
 
 //vpc
-/*
+
 resource "aws_vpc" "dv_vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -112,7 +112,6 @@ resource "aws_route_table_association" "public_2" {
 
 # NAT Gateway for Private Subnets
 resource "aws_eip" "nat" {
-  vpc = true
 }
 
 resource "aws_nat_gateway" "nat_gw" {
@@ -242,13 +241,4 @@ resource "aws_autoscaling_group" "private_asg" {
   }
 
   target_group_arns = [aws_lb_target_group.tg.arn]
-}
-*/
-resource "aws_lambda_function" "name" {
-  function_name = "abs"
-  handler = "lambda_function.lambda_handler"
-  runtime = "python3.9"
-  architectures = ["x86_64"]
-  role = "arn:aws:iam::463470958825:role/lambda"
-  
 }
